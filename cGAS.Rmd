@@ -5,17 +5,17 @@ date: "5/17/2022"
 output: html_document
 ---
 
-```{r setup, include=FALSE, message = FALSE, warning = FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(readxl)
-cGAS_expression <- read_excel("~/Desktop/cGAS/cGAS expression.xlsx")
-CGAS_mutations <- read_excel("~/Desktop/cGAS/CGAS mutations.xlsx")
-sample_info <- read_csv("~/Desktop/cGAS/sample_info.csv")
-cGAS_copynumber <- read_excel("~/Desktop/cGAS/cGAS_copynumber.xlsx")
+cGAS_expression <- read_excel("cGAS expression.xlsx")
+CGAS_mutations <- read_excel("CGAS mutations.xlsx")
+sample_info <- read_excel("sample_info.xlsx")
+cGAS_copynumber <- read_excel("cGAS_copynumber.xlsx")
 ```
 
-```{r dataset}
+```{r dataset, include=FALSE}
 cGAS_data <- cGAS_expression %>%
   inner_join(cGAS_copynumber) %>%
   inner_join(sample_info) %>%
