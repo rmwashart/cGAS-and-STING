@@ -31,8 +31,8 @@ cGAS_data <- expression %>%
 
 ```{r plot1}
 cGAS_data %>%
-  filter(lineage_1 == "Colorectal" | lineage_1 == "Skin") %>%
-ggplot(aes(x = CGAS_express, y = CGAS_copy, color = lineage_1)) +
+  filter(lineage_1 == "Skin") %>%
+ggplot(aes(x = CGAS_express, y = CGAS_copy)) +
   geom_point() +
   geom_text(aes(x = CGAS_express, y = CGAS_copy, label = cell_line), size = 3,
             hjust = -0.1)
