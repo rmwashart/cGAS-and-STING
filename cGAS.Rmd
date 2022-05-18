@@ -9,22 +9,31 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(readxl)
-cGAS_expression <- read_excel("cGAS expression.xlsx")
-CGAS_mutations <- read_excel("CGAS mutations.xlsx")
-sample_info <- read_excel("sample_info.xlsx")
-cGAS_copynumber <- read_excel("cGAS_copynumber.xlsx")
+expression <- read_excel("cGAS-STING-expression.xlsx")
+copynumber <- read_excel("cGAS-STING-copy.xlsx")
+mutation <- read_excel("cGAS-STING-mutation.xlsx")
+info <- read_excel("cell-line-info.xlsx")
 ```
 
 ```{r dataset, include=FALSE}
-cGAS_data <- cGAS_expression %>%
-  inner_join(cGAS_copynumber) %>%
-  inner_join(sample_info) %>%
-  anti_join(CGAS_mutations)
+cgas_mutation <- mutation %>%
+  filter(CGAS == 1)
+
+cGAS_data <- expression %>%
+  filter(CGAS_express < 0.2) %>%
+  inner_join(copynumber) %>%
+  inner_join(info) %>%
+  anti_join(cgas_mutation) %>%
+  select(lineage_1, CGAS_express, CGAS_copy, cell_line)
 ```
 
 ## Plots
 
-```{r plot}
-ggplot(cGAS_data, aes(x = CGAS_express, y = CGAS_copy, color = lineage)) +
-  geom_point()
+```{r plot1}
+cGAS_data %>%
+  filter(lineage_1 == "Colorectal" | lineage_1 == "Skin") %>%
+ggplot(aes(x = CGAS_express, y = CGAS_copy, color = lineage_1)) +
+  geom_point() +
+  geom_text(aes(x = CGAS_express, y = CGAS_copy, label = cell_line), size = 3,
+            hjust = -0.1)
 ```
