@@ -1,0 +1,47 @@
+---
+title: "STING"
+author: "Rachel Washart"
+date: "5/18/2022"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(readxl)
+expression <- read_excel("cGAS-STING-expression.xlsx")
+copynumber <- read_excel("cGAS-STING-copy.xlsx")
+mutation <- read_excel("cGAS-STING-mutation.xlsx")
+info <- read_excel("cell-line-info.xlsx")
+```
+
+```{r sting, eval = F}
+expression %>%
+  summarise(mean = mean(STING1_express)) %>%
+  summarise(mean / 5)
+```
+
+
+```{r DATASET, include = F}
+STING_mutation <- mutation %>%
+  filter(STING1 == 1)
+
+STING_data <- expression %>%
+  filter(STING1_express < 0.7466996) %>%
+  inner_join(copynumber) %>%
+  inner_join(info) %>%
+  anti_join(STING_mutation) %>%
+  select(lineage_1, STING1_express, STING1_copy, cell_line)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r plotsting}
+STING_data %>%
+  filter(lineage_1 == "Skin") %>%
+ggplot(aes(x = STING1_express, y = STING1_copy)) +
+  geom_point() +
+  geom_text(aes(x = STING1_express, y = STING1_copy, label = cell_line), size = 3,
+            hjust = -0.1)
+```
