@@ -16,20 +16,12 @@ mutation <- read_excel("cGAS-STING-mutation.xlsx")
 info <- read_excel("cell-line-info.xlsx")
 ```
 
-
-```{r cgas percent, eval = F}
-expression %>%
-  summarise(mean = mean(CGAS_express)) %>%
-  summarise(mean / 10)
-```
-
-
 ```{r dataset, include=FALSE}
 cgas_mutation <- mutation %>%
   filter(CGAS == 1)
 
 cGAS_data <- expression %>%
-  filter(CGAS_express < 0.220941) %>%
+  filter(CGAS_express < 0.25) %>%
   inner_join(copynumber) %>%
   inner_join(info) %>%
   anti_join(cgas_mutation) %>%

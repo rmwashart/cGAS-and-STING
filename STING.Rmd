@@ -26,7 +26,7 @@ STING_mutation <- mutation %>%
   filter(STING1 == 1)
 
 STING_data <- expression %>%
-  filter(STING1_express < 0.7466996) %>%
+ ## filter(STING1_express < 0.7466996) %>%
   inner_join(copynumber) %>%
   inner_join(info) %>%
   anti_join(STING_mutation) %>%
