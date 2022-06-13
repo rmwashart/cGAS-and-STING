@@ -10,10 +10,12 @@ knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(readxl)
 library(dplyr)
+library(ggrepel)
 expression <- read_excel("cGAS-STING-expression.xlsx")
 copynumber <- read_excel("cGAS-STING-copy.xlsx")
 mutation <- read_excel("cGAS-STING-mutation.xlsx")
 info <- read_excel("cell-line-info.xlsx")
+filtercell <- read_excel("cell line bank.xlsx")
 ```
 
 ```{r dataset, include=FALSE}
@@ -21,7 +23,7 @@ cgas_mutation <- mutation %>%
   filter(CGAS == 1)
 
 cGAS_data <- expression %>%
-  filter(CGAS_express < 0.25) %>%
+  ##filter(CGAS_express < 0.25) %>%
   inner_join(copynumber) %>%
   inner_join(info) %>%
   anti_join(cgas_mutation) %>%
@@ -32,9 +34,13 @@ cGAS_data <- expression %>%
 
 ```{r plot1}
 cGAS_data %>%
+  full_join(filtercell) %>%
   filter(lineage_1 == "Colorectal") %>%
+  filter(used == 1) %>%
 ggplot(aes(x = CGAS_express, y = CGAS_copy)) +
   geom_point() +
-  geom_text(aes(x = CGAS_express, y = CGAS_copy, label = cell_line), size = 3,
-            hjust = -0.1)
+  geom_text_repel(aes(x = CGAS_express, y = CGAS_copy, label = cell_line), 
+                  size = 3) + 
+  labs(x = "cGAS Expression", y = "cGAS Copy Number", 
+       title = "Colorectal Cell Lines")
 ```
